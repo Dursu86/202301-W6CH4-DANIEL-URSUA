@@ -1,5 +1,4 @@
 import http from 'http';
-import fs from 'fs';
 import url from 'url';
 import { calculator } from './calculator.js';
 
@@ -9,6 +8,11 @@ const server = http.createServer((req, resp) => {
   const { pathname, query } = url.parse(req.url!);
   if (pathname !== '/calculator') {
     server.emit('error', new Error('404'));
+    resp.writeHead(404, 'Page not found');
+    resp.write(`
+      <h1>PAGE NOT FOUND<h1>
+      <p> Please enter a valid url<p>
+    `);
     return;
   }
 
@@ -26,7 +30,7 @@ const server = http.createServer((req, resp) => {
       }
 
       resp.writeHead(200);
-      resp.write(`
+      resp.write(`<h1>HERE IS YOUR RESULTS:</h1>
       <p>${object.a} + ${object.b} = ${calculator(object.a, object.b).sum}</p>
       <p>${object.a} + ${object.b} = ${calculator(object.a, object.b).rest}</p>
       <p>${object.a} + ${object.b} = ${calculator(object.a, object.b).mult}</p>
